@@ -1,0 +1,22 @@
+name: Java API Tests
+on: [push]
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run Tests
+        run: mvn clean test -DbaseUrl=http://localhost:8000
+      - name: Generate Allure Report
+        run: mvn allure:report
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin
